@@ -1,5 +1,6 @@
 recursive-include metapy/lib *
 include metapy/compile.sh
+include metapy/compile.bat
 include metapy/java_cleanup.sh
 include metapy/EntryPoint.jar
 include metapy/EntryPoint.class
