@@ -1,0 +1,4 @@
+.eggs/
+build/
+metapy.egg-info/
+metapy/__pycache__/
