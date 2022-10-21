@@ -5,6 +5,10 @@ from re import compile, sub, search
 from metapy.gateway import gateway, is_instance_of, get_documentation
 from metapy.util import camel_to_snake_case
 
+override_sets = {'mcnpy': {},
+                'serpy': {},
+                'kenopy': {}}
+
 # Object meaning java.lang.Object
 _OBJECT_METHODS = ('clone', 
                    'equals', 
@@ -76,11 +80,20 @@ _DOC_PATTERNS = (compile('<em>[\w\s_]*</em>}'),
                 #(compile(':\sdouble'), ': float'))
 
 # Used as a function in the output converter.
-def wrap_e_object(target_id, gateway_client, wrappers):
+def wrap_e_object(target_id, gateway_client, wrappers, package):
     object = JavaObject(target_id, gateway_client)
     # Use string to avoid infinite loop.
     cls = str(object)
+    if len(override_sets[package]) == 0:
+        override_sets[package] = wrappers
+    if cls.find('mcnp.impl') > 0:
+        wrappers = override_sets['mcnpy']
+    elif cls.find('serpent.impl') > 0:
+        wrappers = override_sets['serpy']
+    elif cls.find('keno.impl') > 0:
+        wrappers = override_sets['kenopy']
     cls = cls[cls.find('impl.')+5:cls.find('Impl')]
+
     if cls in wrappers:
         wrapped = wrappers[cls]()
         wrapped._e_object = object
@@ -335,7 +348,7 @@ def set_e_list(setter, feature, value, overrides):
                 + str(type(value[i])) + ' is invalid for feature "'
                 + str(feature.getName()) + '"')
 
-def e_class_body(e_class, e_factory, overrides, numeric_ids=False):
+def e_class_body(e_class, e_factory, overrides, numeric_ids=False, package=None):
     """Return a Python class body which implements an EClass."""
     def __init__(self, *args, **kwargs):
         #This might be a little sketchy, but the output converter for 
@@ -352,7 +365,7 @@ def e_class_body(e_class, e_factory, overrides, numeric_ids=False):
         #print(self._e_object)
         register_output_converter(REFERENCE_TYPE, 
             (lambda target_id, 
-            gateway_client: wrap_e_object(target_id, gateway_client, overrides)))
+            gateway_client: wrap_e_object(target_id, gateway_client, overrides, package)))
         if args or kwargs:
             self._init(*args, **kwargs)
     def _init(self):
@@ -423,7 +436,7 @@ def e_class_body(e_class, e_factory, overrides, numeric_ids=False):
 
     return body
 
-def wrap_e_package(e_package, overrides, wrap_e_class):
+def wrap_e_package(e_package, overrides, package, wrap_e_class):
     """Wrap every EClass contained in an EPackage."""
     wrappers = {}
     e_factory = e_package.getEFactoryInstance()
@@ -431,7 +444,7 @@ def wrap_e_package(e_package, overrides, wrap_e_class):
         EClass = gateway.jvm.org.eclipse.emf.ecore.EClass
         if not is_instance_of(classifier, EClass):
             continue
-        wrappers[classifier.getName()] = wrap_e_class(classifier, e_factory, InternalEObject, overrides)
+        wrappers[classifier.getName()] = wrap_e_class(classifier, e_factory, InternalEObject, overrides, package)
     return wrappers
 
 def wrap_e_factory(e_factory):
