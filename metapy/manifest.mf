@@ -1,45 +1,41 @@
 Manifest-version: 1.0
-Class-Path: ./lib/org.eclipse.emf.ecore-2.12.0.jar 
- ./lib/org.eclipse.emf.common-2.12.0.jar 
- ./lib/org.eclipse.xtext.common.types-2.20.0.jar 
- ./lib/org.eclipse.equinox.common-3.10.500.jar 
- ./lib/aopalliance-1.0.jar 
- ./lib/asm-analysis-7.2.jar 
- ./lib/org.eclipse.emf.ecore.xmi-2.12.0.jar 
- ./lib/org.eclipse.emf.ecore.change-2.11.0.jar 
+Class-Path: ./lib/aopalliance-1.0.jar 
+ ./lib/org.eclipse.xtext.ide-2.27.0.jar 
+ ./lib/org.eclipse.emf.ecore-2.20.0.jar 
+ ./lib/org.eclipse.emf.ecore.change-2.14.0.jar 
+ ./lib/org.eclipse.lsp4j.jsonrpc-0.14.0.jar 
+ ./lib/classgraph-4.8.138.jar 
  ./lib/antlr-runtime-3.2.jar 
  ./lib/gov.lanl.serpent-1.0.0-SNAPSHOT.jar 
- ./lib/error_prone_annotations-2.2.0.jar 
  ./lib/jsr305-3.0.2.jar 
- ./lib/classgraph-4.8.35.jar 
- ./lib/org.eclipse.xtext.ide-2.20.0.jar 
+ ./lib/checker-qual-3.5.0.jar 
  ./lib/py4j0.10.9.2.jar 
- ./lib/guice-3.0.jar 
+ ./lib/org.eclipse.xtext.common.types-2.27.0.jar 
+ ./lib/org.eclipse.xtend.lib.macro-2.27.0.jar 
  ./lib/gov.lanl.mcnp.ide-1.0.0-SNAPSHOT.jar 
- ./lib/org.eclipse.xtext.xbase.lib-2.20.0.jar 
+ ./lib/org.eclipse.emf.common-2.17.0.jar 
+ ./lib/org.eclipse.xtext.xbase-2.27.0.jar 
+ ./lib/org.eclipse.equinox.common-3.13.0.jar 
  ./lib/gov.lanl.mcnp-1.0.0-SNAPSHOT.jar 
- ./lib/asm-commons-7.2.jar 
- ./lib/org.eclipse.lsp4j.jsonrpc-0.8.1.jar 
- ./lib/org.eclipse.xtext.util-2.20.0.jar 
+ ./lib/j2objc-annotations-1.3.jar 
+ ./lib/org.eclipse.osgi-3.16.0.jar 
+ ./lib/org.eclipse.emf.ecore.xmi-2.16.0.jar 
+ ./lib/org.eclipse.xtext.xbase.ide-2.27.0.jar 
  ./lib/failureaccess-1.0.1.jar 
- ./lib/j2objc-annotations-1.1.jar 
- ./lib/org.eclipse.xtend.lib.macro-2.20.0.jar 
- ./lib/org.eclipse.lsp4j-0.8.1.jar 
- ./lib/org.eclipse.lsp4j.generator-0.8.1.jar 
  ./lib/org.eclipse.xtext.testing-2.20.0.jar 
  ./lib/reload4j-1.2.19.jar 
  ./lib/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar 
- ./lib/gson-2.8.2.jar 
- ./lib/animal-sniffer-annotations-1.17.jar 
- ./lib/asm-7.2.jar 
+ ./lib/asm-9.3.jar 
+ ./lib/error_prone_annotations-2.3.4.jar 
  ./lib/javax.inject-1.jar 
- ./lib/org.eclipse.osgi-3.15.0.jar 
- ./lib/asm-tree-7.2.jar 
- ./lib/checker-qual-2.5.2.jar 
- ./lib/org.eclipse.xtext-2.20.0.jar 
+ ./lib/guava-30.1-jre.jar 
+ ./lib/org.eclipse.lsp4j.generator-0.14.0.jar 
+ ./lib/org.eclipse.lsp4j-0.14.0.jar 
+ ./lib/gson-2.8.9.jar 
  ./lib/gov.lanl.serpent.ide-1.0.0-SNAPSHOT.jar 
- ./lib/org.eclipse.xtext.xbase-2.20.0.jar 
- ./lib/org.eclipse.xtend.lib-2.20.0.jar 
- ./lib/org.eclipse.xtext.xbase.ide-2.20.0.jar 
- ./lib/guava-27.1-jre.jar 
+ ./lib/guice-5.0.1.jar 
+ ./lib/org.eclipse.xtext-2.27.0.jar 
+ ./lib/org.eclipse.xtext.xbase.lib-2.27.0.jar 
+ ./lib/org.eclipse.xtend.lib-2.27.0.jar 
+ ./lib/org.eclipse.xtext.util-2.27.0.jar 
 Main-Class: EntryPoint

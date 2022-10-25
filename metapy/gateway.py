@@ -39,8 +39,8 @@ def load_file(filename):
 
 def deck_resource(deck):
     if str(type(deck)) == "<class 'mcnpy._deck.Deck'>":
-        return gateway.deckResourceMcnp(deck, 'deck.mcnp')
+        return gateway.deckResourceMcnp(deck.__copy__(), 'deck.mcnp')
     elif str(type(deck)) == "<class 'serpy.deck.Deck'>":
-        return gateway.deckResourceSerpent(deck, 'deck.serpent')
+        return gateway.deckResourceSerpent(deck.__copy__(), 'deck.serpent')
     else:
         raise Exception('DECK RESOURCE ERROR! for deck of type: ' + str(type(deck)))
