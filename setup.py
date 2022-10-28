@@ -11,6 +11,6 @@ setup(
     author_email='kowalp@rpi.edu',
     description='Metamodel-Driven Java Server',
     license='MIT',
-    install_requires=['py4j', 'psutil'],
+    install_requires=['py4j', 'psutil', 'h5py'],
     platforms=['Windows', 'Linux']
 )

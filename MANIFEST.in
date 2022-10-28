@@ -5,3 +5,5 @@ include metapy/java_cleanup.sh
 include metapy/EntryPoint.jar
 include metapy/EntryPoint.class
 include metapy/EntryPoint.java
+include metapy/masses.h5
+include metapy/xslist.h5
