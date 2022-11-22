@@ -1,4 +1,6 @@
+.gitignore
 .eggs/
 build/
 metapy.egg-info/
 metapy/__pycache__/
+update.sh

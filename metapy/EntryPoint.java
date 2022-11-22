@@ -150,7 +150,10 @@ public class EntryPoint {
 
         gov.lanl.serpent.serpent.Deck DECK = factorySerpent.createDeck();
 
-        EList<gov.lanl.serpent.serpent.Card> cards = DECK.getCards();
+        EList<gov.lanl.serpent.serpent.Cell> cells = DECK.getCells();
+        EList<gov.lanl.serpent.serpent.Surface> surfaces = DECK.getSurfaces();
+        EList<gov.lanl.serpent.serpent.Material> materials = DECK.getMaterials();
+        EList<gov.lanl.serpent.serpent.Card> data = DECK.getData();
 
         EList<EObject> _contents = resource.getContents();
         _contents.add(DECK);
