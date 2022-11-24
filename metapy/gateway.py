@@ -23,7 +23,7 @@ def get_documentation(e_class):
 def print_deck(deck):
     if str(type(deck)) == "<class 'mcnpy._deck.Deck'>":
         return gateway.printDeckMcnp(deck)
-    elif str(type(deck)) == "<class 'serpy.deck.Deck'>":
+    elif str(type(deck)) == "<class 'serpy._deck.Deck'>":
         return gateway.printDeckSerpent(deck)
     else:
         raise Exception('SERIALIZATION ERROR! for deck of type: ' + str(type(deck)))
@@ -40,7 +40,7 @@ def load_file(filename):
 def deck_resource(deck):
     if str(type(deck)) == "<class 'mcnpy._deck.Deck'>":
         return gateway.deckResourceMcnp(deck.__copy__(), 'deck.mcnp')
-    elif str(type(deck)) == "<class 'serpy.deck.Deck'>":
+    elif str(type(deck)) == "<class 'serpy._deck.Deck'>":
         return gateway.deckResourceSerpent(deck.__copy__(), 'deck.serpent')
     else:
         raise Exception('DECK RESOURCE ERROR! for deck of type: ' + str(type(deck)))
