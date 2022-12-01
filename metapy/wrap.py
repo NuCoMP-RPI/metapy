@@ -74,6 +74,7 @@ _DOC_PATTERNS = (compile('<em>[\w\s_]*</em>}'),
                 (compile('{@link\s[\w.#]*\s'), ''),
                 (compile('}\s:\s'), ' : '),
                 (compile('{@link\sgov.lanl.mcnp.mcnp'), 'mcnpy'),
+                (compile('{@link\sfi.vtt.serpent.serpent'), 'serpy'),
                 (compile('}'), ''),
                 (compile('EList of'), 'iterable of'))
                 #(compile(':\sString'), ': str'),

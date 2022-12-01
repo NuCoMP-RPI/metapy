@@ -20,9 +20,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.EClass;
 
-import gov.lanl.serpent.SerpentStandaloneSetup;
-import gov.lanl.serpent.serpent.SerpentPackage;
-import gov.lanl.serpent.serpent.SerpentFactory;
+import fi.vtt.serpent.SerpentStandaloneSetup;
+import fi.vtt.serpent.serpent.SerpentPackage;
+import fi.vtt.serpent.serpent.SerpentFactory;
 
 import gov.lanl.mcnp.McnpStandaloneSetup;
 import gov.lanl.mcnp.mcnp.McnpPackage;
@@ -55,7 +55,7 @@ public class EntryPoint {
         return(doc);
     }
 
-    public String printDeckSerpent(gov.lanl.serpent.serpent.Deck DECK) {
+    public String printDeckSerpent(fi.vtt.serpent.serpent.Deck DECK) {
         this.validator.assertNoErrors(DECK);
         String serializedDeck = this.serializer.serialize(DECK, SaveOptions.newBuilder().format().getOptions());
 
@@ -71,7 +71,7 @@ public class EntryPoint {
     }
 
     // Reads a deck from a file
-	public gov.lanl.serpent.serpent.Deck loadFileSerpent(String file) {
+	public fi.vtt.serpent.serpent.Deck loadFileSerpent(String file) {
         try {
             Injector injector = new SerpentStandaloneSetup().createInjectorAndDoEMFRegistration();
 
@@ -81,7 +81,7 @@ public class EntryPoint {
             Resource xtextResource = resourceSet.getResource(uri, true);
             EcoreUtil.resolveAll(xtextResource);
 
-            gov.lanl.serpent.serpent.Deck DECK = (gov.lanl.serpent.serpent.Deck) (xtextResource.getContents().get(0));
+            fi.vtt.serpent.serpent.Deck DECK = (fi.vtt.serpent.serpent.Deck) (xtextResource.getContents().get(0));
             this.validator.assertNoErrors(DECK);
             
             return(DECK);
@@ -111,7 +111,7 @@ public class EntryPoint {
         }
     }
 
-    public gov.lanl.serpent.serpent.Deck deckResourceSerpent(gov.lanl.serpent.serpent.Deck deck, String filename) {
+    public fi.vtt.serpent.serpent.Deck deckResourceSerpent(fi.vtt.serpent.serpent.Deck deck, String filename) {
         Injector injector = new SerpentStandaloneSetup().createInjectorAndDoEMFRegistration();
 
         injector.injectMembers(this);
@@ -140,7 +140,7 @@ public class EntryPoint {
         return (deck);
     }
 
-    public gov.lanl.serpent.serpent.Deck newSerpentDeck(String filename) {
+    public fi.vtt.serpent.serpent.Deck newSerpentDeck(String filename) {
         Injector injector = new SerpentStandaloneSetup().createInjectorAndDoEMFRegistration();
 
         injector.injectMembers(this);
@@ -148,12 +148,12 @@ public class EntryPoint {
         URI uri = URI.createURI(filename);
         Resource resource = resourceSet.createResource(uri);
 
-        gov.lanl.serpent.serpent.Deck DECK = factorySerpent.createDeck();
+        fi.vtt.serpent.serpent.Deck DECK = factorySerpent.createDeck();
 
-        EList<gov.lanl.serpent.serpent.Cell> cells = DECK.getCells();
-        EList<gov.lanl.serpent.serpent.Surface> surfaces = DECK.getSurfaces();
-        EList<gov.lanl.serpent.serpent.Material> materials = DECK.getMaterials();
-        EList<gov.lanl.serpent.serpent.Card> data = DECK.getData();
+        EList<fi.vtt.serpent.serpent.Cell> cells = DECK.getCells();
+        EList<fi.vtt.serpent.serpent.Surface> surfaces = DECK.getSurfaces();
+        EList<fi.vtt.serpent.serpent.Material> materials = DECK.getMaterials();
+        EList<fi.vtt.serpent.serpent.Card> data = DECK.getData();
 
         EList<EObject> _contents = resource.getContents();
         _contents.add(DECK);
