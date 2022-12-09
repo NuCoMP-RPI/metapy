@@ -56,15 +56,18 @@ public class EntryPoint {
     }
 
     public String printDeckSerpent(fi.vtt.serpent.serpent.Deck DECK) {
-        this.validator.assertNoErrors(DECK);
+        // This really just seemed to hide useful error messages.
+        // An invalid deck has no hope of serializing anyway.
+        //this.validator.assertNoErrors(DECK);
         String serializedDeck = this.serializer.serialize(DECK, SaveOptions.newBuilder().format().getOptions());
 
         return(serializedDeck);
     }
 
     public String printDeckMcnp(gov.lanl.mcnp.mcnp.Deck DECK) {
-        //String serializedDeck = this.serializer.serialize(DECK);
-        this.validator.assertNoErrors(DECK);
+        // This really just seemed to hide useful error messages.
+        // An invalid deck has no hope of serializing anyway.
+        //this.validator.assertNoErrors(DECK);
         String serializedDeck = this.serializer.serialize(DECK, SaveOptions.newBuilder().format().getOptions());
 
         return(serializedDeck);
