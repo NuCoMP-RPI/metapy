@@ -2,7 +2,7 @@ eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
 # Copy language server build
 #cp -r /home/peter/eclipse2022/MCNP-LS/gov.lanl.mcnp.parent/gov.lanl.mcnp.ide/build/install/gov.lanl.mcnp.ide/lib /home/peter/Research/mm_server_api/metapy
 
-#cp -r /home/peter/eclipse2022/Serpent-LS/fi.vtt.serpent.parent/fi.vtt.serpent.ide/build/install/fi.vtt.serpent.ide/lib /home/peter/Research/mm_server_api/metapy
+cp -r /home/peter/eclipse2022/Serpent-LS/fi.vtt.serpent.parent/fi.vtt.serpent.ide/build/install/fi.vtt.serpent.ide/lib /home/peter/Research/mm_server_api/metapy
 
 # Recompile EntryPoint.jar
 cd ~/Research/mm_server_api/metapy
