@@ -4,3 +4,9 @@ build/
 metapy.egg-info/
 metapy/__pycache__/
 update.sh
+inspect_test.py
+metapy/updateManifest2.py
+metapy/Test.java
+metapy/Test.jar
+metapy/Test.class
+metapy/compile2.sh

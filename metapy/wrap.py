@@ -1,4 +1,4 @@
-from py4j.protocol import Py4JError, register_output_converter, REFERENCE_TYPE
+from py4j.protocol import Py4JError, Py4JJavaError, register_output_converter, REFERENCE_TYPE
 from py4j.java_collections import JavaList
 from py4j.java_gateway import JavaObject
 from re import compile, sub, search
@@ -82,23 +82,39 @@ _DOC_PATTERNS = (compile('<em>[\w\s_]*</em>}'),
 
 # Used as a function in the output converter.
 def wrap_e_object(target_id, gateway_client, wrappers, package):
+    #print(inspect.stack(context=1), '\n')
     object = JavaObject(target_id, gateway_client)
-    # Use string to avoid infinite loop.
-    cls = str(object)
-    if len(override_sets[package]) == 0:
-        override_sets[package] = wrappers
-    if cls.find('mcnp.impl') > 0:
-        wrappers = override_sets['mcnpy']
-    elif cls.find('serpent.impl') > 0:
-        wrappers = override_sets['serpy']
-    elif cls.find('keno.impl') > 0:
-        wrappers = override_sets['kenopy']
-    cls = cls[cls.find('impl.')+5:cls.find('Impl')]
+    wrap_it = True
+    """i = 0
+    for frame in reversed(inspect.stack(context=1)):
+        i = i + 1
+        print(i, str(object))
+        if frame is not None:
+            if frame[4] is not None:
+                if frame[4][0] == '        self._e_object = e_factory.create(e_class)\n':
+                    wrap_it = False
+                    break"""
+    if wrap_it is True:
+        # Use string to avoid infinite loop.
+        cls = str(object)
+        if len(override_sets[package]) == 0:
+            override_sets[package] = wrappers
+        if cls.find('mcnp.impl') > 0:
+            wrappers = override_sets['mcnpy']
+        elif cls.find('serpent.impl') > 0:
+            wrappers = override_sets['serpy']
+        elif cls.find('keno.impl') > 0:
+            wrappers = override_sets['kenopy']
+        cls = cls[cls.find('impl.')+5:cls.find('Impl')]
 
-    if cls in wrappers:
-        wrapped = wrappers[cls]()
-        wrapped._e_object = object
-        return wrapped
+    if wrap_it is True:
+        if cls in wrappers:
+            wrapped = wrappers[cls]()
+            try:
+                wrapped._e_object = object
+                return wrapped
+            except:
+                return object
     return object
 
 def delegate_methods(methods):
@@ -191,7 +207,7 @@ def return_value_converter(feature, value):
                     return value
             else:
                 return float(value)
-        except:
+        except ValueError:
             return value
     else:
         # Want to return the emum literal istead of the java object.
@@ -220,17 +236,17 @@ def value_converter(setter, feature, value, numeric_ids):
             if isinstance(value, str) and feature.getName() == 'name':
                 try:
                     int(value)
-                except:
+                except ValueError:
                     raise Exception('"' + value + '" is an invalid ID number')
             elif isinstance(value, str) and feature.getName() == 'comment':
                 if value[0] != '$':
                     value = '$ ' + value
         setter.eSet(feature, value)
-    except:
+    except (ValueError, Py4JJavaError):
         if isinstance(value, int):
             try:
                 setter.eSet(feature, float(value))
-            except:
+            except (ValueError, Py4JJavaError):
                 setter.eSet(feature, str(value))
         # IDs/names are always INTs
         elif isinstance(value, float) and feature.getName() == 'name':
@@ -238,7 +254,7 @@ def value_converter(setter, feature, value, numeric_ids):
             if value%1 == 0:
                 try:
                     setter.eSet(feature, int(value))
-                except:
+                except (ValueError, Py4JJavaError):
                     setter.eSet(feature, str(value))
             else:
                 raise Exception('"' + str(value) + '" of type '
@@ -248,12 +264,12 @@ def value_converter(setter, feature, value, numeric_ids):
         elif isinstance(value, float):
             try:
                 setter.eSet(feature, int(value))
-            except:
+            except (ValueError, Py4JJavaError):
                 setter.eSet(feature, str(value))
         elif isinstance(value, str):
             try:
                 setter.eSet(feature, float(value))
-            except:
+            except (ValueError, Py4JJavaError):
                 setter.eSet(feature, int(value))
         else:
                 raise Exception('"' + str(value) + '" of type '

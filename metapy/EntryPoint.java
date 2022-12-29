@@ -153,10 +153,10 @@ public class EntryPoint {
 
         fi.vtt.serpent.serpent.Deck DECK = factorySerpent.createDeck();
 
-        EList<fi.vtt.serpent.serpent.Cell> cells = DECK.getCells();
+        /*EList<fi.vtt.serpent.serpent.Cell> cells = DECK.getCells();
         EList<fi.vtt.serpent.serpent.Surface> surfaces = DECK.getSurfaces();
         EList<fi.vtt.serpent.serpent.Material> materials = DECK.getMaterials();
-        EList<fi.vtt.serpent.serpent.Card> data = DECK.getData();
+        EList<fi.vtt.serpent.serpent.Card> data = DECK.getData();*/
 
         EList<EObject> _contents = resource.getContents();
         _contents.add(DECK);
@@ -181,10 +181,10 @@ public class EntryPoint {
         gov.lanl.mcnp.mcnp.Cells CELLS = factoryMcnp.createCells();
         gov.lanl.mcnp.mcnp.Data DATA = factoryMcnp.createData();
 
-        EList<gov.lanl.mcnp.mcnp.Surface> surfs = SURFACES.getSurfaces();
+        /*EList<gov.lanl.mcnp.mcnp.Surface> surfs = SURFACES.getSurfaces();
         EList<gov.lanl.mcnp.mcnp.Cell> cells = CELLS.getCells();
         EList<gov.lanl.mcnp.mcnp.Material> mats = DATA.getMaterials();
-        EList<gov.lanl.mcnp.mcnp.Setting> settings = DATA.getSettings();
+        EList<gov.lanl.mcnp.mcnp.Setting> settings = DATA.getSettings();*/
 
         DECK.setCells(CELLS);
         DECK.setSurfaces(SURFACES);
