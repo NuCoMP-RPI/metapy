@@ -2,6 +2,7 @@ from py4j.protocol import Py4JError, Py4JJavaError, register_output_converter, R
 from py4j.java_collections import JavaList
 from py4j.java_gateway import JavaObject
 from re import compile, sub, search
+from enum import Enum
 from metapy.gateway import gateway, is_instance_of, get_documentation
 from metapy.util import camel_to_snake_case
 
@@ -219,11 +220,25 @@ def return_value_converter(feature, value):
             if isinstance(value, JavaList):
                 if is_instance_of(data_type, EEnum):
                     e_list = []
-                    for i in range(len(value)):
-                        e_list.append(value[i].toString())
+                    for v in value:
+                        val_str = v.toString()
+                        if val_str == '¥×¥':
+                            val_str = None
+                        e_list.append(val_str)
                     return e_list
             if is_instance_of(data_type, EEnum):
-                return value.toString()
+                val_str = value.toString()
+                # Enums cannot have nothing for their literal which makes the 
+                # grammar technically incorrect in certain cases. E.g. on MCNP 
+                # surfaces, the BC enum needs an option for vacuum even though
+                # the syntax for this option is simply not the other options.
+                # To avoid false validation of the literal, we set it to 
+                # characters that would be very abnormal for the user to type.
+                # Thus any literal of yen-sign, multiplication-sign, yen-sign
+                # should be trated as None.
+                if val_str == '¥×¥':
+                    return None
+                return val_str
 
         return value
 
@@ -242,8 +257,11 @@ def value_converter(setter, feature, value, numeric_ids):
                 if value[0] != '$':
                     value = '$ ' + value
         setter.eSet(feature, value)
-    except (ValueError, Py4JJavaError):
-        if isinstance(value, int):
+    except (ValueError, Py4JJavaError, AttributeError):
+        if isinstance(value, Enum):
+            value_enum = is_enum(value.value, feature)
+            setter.eSet(feature, value_enum)
+        elif isinstance(value, int):
             try:
                 setter.eSet(feature, float(value))
             except (ValueError, Py4JJavaError):
@@ -327,7 +345,7 @@ def javadoc_to_docstring(e_class):
                 line = sub(_DOC_PATTERNS[0], new_name, line)
             for pattern in _DOC_PATTERNS[3:]:
                 line = sub(pattern[0], pattern[1], line)
-            line = line.replace('String', 'str').replace('double', 'float').replace('Integer', 'int').replace('Double', 'float')
+            line = line.replace('String', 'str').replace('double', 'float').replace('Integer', 'int').replace('Double', 'float').replace('name : str', 'name : int').replace('EObject', 'Object')
 
             docstring += line + '\n'
         
@@ -352,6 +370,8 @@ def set_e_list(setter, feature, value, overrides):
             gateway.copier.copyReferences()
             e_list.addUnique(value_copy._e_object)
         else:
+            if isinstance(value[i], Enum):
+                value[i] = value[i].value
             value[i] = is_enum(value[i], feature)
             try:
                 e_list.addUnique(value[i])
