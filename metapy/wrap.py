@@ -354,35 +354,31 @@ def javadoc_to_docstring(e_class):
         return 'Python class for ' + e_class.toString()
 
 
-def set_e_list(setter, feature, value, overrides):
+def set_e_list(setter, feature, values, overrides):
     e_list = setter.eGet(feature, True)
-    EReference = gateway.jvm.org.eclipse.emf.ecore.EReference
-    #print('HERE', feature)
-    for i in range(len(value)):
-        # Special treatment for universes on lattices.
-        # TODO: see if there are other special cases like this.
-        # Removed due to grammar change. 
-        """if type(value[i]).__name__ == 'Universe':
-            e_list.addUnique(value[i]._e_object)
-        el"""
-        if type(value[i]).__qualname__ in overrides:
-            value_copy = gateway.copier.copy(value[i]._e_object)
+    for value in values:
+        # Objects with 'name' have IDs and can be referenced.
+        # We want to reference the original object, don't copy!
+        if hasattr(value, 'name') and hasattr(value, '_e_object'):
+            e_list.addUnique(value._e_object)
+        elif type(value).__qualname__ in overrides:
+            value_copy = gateway.copier.copy(value._e_object)
             gateway.copier.copyReferences()
             e_list.addUnique(value_copy._e_object)
         else:
-            if isinstance(value[i], Enum):
-                value[i] = value[i].value
-            value[i] = is_enum(value[i], feature)
+            if isinstance(value, Enum):
+                value = value.value
+            value = is_enum(value, feature)
             try:
-                e_list.addUnique(value[i])
+                e_list.addUnique(value)
             except:
-                if isinstance(value[i], int):
-                    e_list.addUnique(float(value[i]))
-                elif isinstance(value[i], float):
-                    e_list.addUnique(int(value[i]))
+                if isinstance(value, int):
+                    e_list.addUnique(float(value))
+                elif isinstance(value, float):
+                    e_list.addUnique(int(value))
                 else:
-                    raise Exception('"' + str(value[i]) + '" of type '
-                + str(type(value[i])) + ' is invalid for feature "'
+                    raise Exception('"' + str(value) + '" of type '
+                + str(type(value)) + ' is invalid for feature "'
                 + str(feature.getName()) + '"')
 
 def e_class_body(e_class, e_factory, overrides, numeric_ids=False, package=None):
