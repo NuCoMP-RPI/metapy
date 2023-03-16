@@ -7,6 +7,8 @@ def ePackage(package):
         return gateway.ePackageMcnp
     elif package.lower() == 'serpy':
         return gateway.ePackageSerpent
+    elif package.lower() == 'kenopy':
+        return gateway.ePackageKeno
     else:
         raise Exception('UNSUPPORTED PACKAGE ERROR! for code "' + package + '"')
 
@@ -25,6 +27,8 @@ def print_deck(deck):
         return gateway.printDeckMcnp(deck)
     elif str(type(deck)) == "<class 'serpy._deck.Deck'>":
         return gateway.printDeckSerpent(deck)
+    elif str(type(deck)) == "<class 'kenopy._deck.InputFile'>":
+        return gateway.printDeckSerpent(deck)
     else:
         raise Exception('SERIALIZATION ERROR! for deck of type: ' + str(type(deck)))
 
@@ -35,12 +39,17 @@ def load_file(filename):
         try:
             return gateway.loadFileSerpent(filename)
         except:
-            raise Exception('PARSING ERROR! for file: ' + filename)
+            try:
+                return gateway.loadFileKeno(filename)
+            except:
+                raise Exception('PARSING ERROR! for file: ' + filename)
 
 def deck_resource(deck):
     if str(type(deck)) == "<class 'mcnpy._deck.Deck'>":
         return gateway.deckResourceMcnp(deck.__copy__(), 'deck.mcnp')
     elif str(type(deck)) == "<class 'serpy._deck.Deck'>":
         return gateway.deckResourceSerpent(deck.__copy__(), 'deck.serpent')
+    elif str(type(deck)) == "<class 'kenopy._deck.InputFile'>":
+        return gateway.deckResourceSerpent(deck.__copy__(), 'deck.keno')
     else:
         raise Exception('DECK RESOURCE ERROR! for deck of type: ' + str(type(deck)))

@@ -28,6 +28,10 @@ import gov.lanl.mcnp.McnpStandaloneSetup;
 import gov.lanl.mcnp.mcnp.McnpPackage;
 import gov.lanl.mcnp.mcnp.McnpFactory;
 
+import gov.ornl.scale.keno.KenoStandaloneSetup;
+import gov.ornl.scale.keno.keno.KenoPackage;
+import gov.ornl.scale.keno.keno.KenoFactory;
+
 @SuppressWarnings("all")
 public class EntryPoint {
 
@@ -39,6 +43,7 @@ public class EntryPoint {
 	
 	public SerpentPackage ePackageSerpent = SerpentPackage.eINSTANCE;
     public McnpPackage ePackageMcnp = McnpPackage.eINSTANCE;
+    public KenoPackage ePackageKeno = KenoPackage.eINSTANCE;
 	
 	public Copier copier = new Copier(true);
 	
@@ -48,6 +53,7 @@ public class EntryPoint {
 
 	public SerpentFactory factorySerpent = SerpentFactory.eINSTANCE;
     public McnpFactory factoryMcnp = McnpFactory.eINSTANCE;
+    public KenoFactory factoryKeno = KenoFactory.eINSTANCE;
 
     public String getDocs(EClass e_class) {
         String doc = EcoreUtil.getDocumentation(e_class);
@@ -65,6 +71,15 @@ public class EntryPoint {
     }
 
     public String printDeckMcnp(gov.lanl.mcnp.mcnp.Deck DECK) {
+        // This really just seemed to hide useful error messages.
+        // An invalid deck has no hope of serializing anyway.
+        //this.validator.assertNoErrors(DECK);
+        String serializedDeck = this.serializer.serialize(DECK, SaveOptions.newBuilder().format().getOptions());
+
+        return(serializedDeck);
+    }
+
+    public String printDeckKeno(gov.ornl.scale.keno.keno.InputFile DECK) {
         // This really just seemed to hide useful error messages.
         // An invalid deck has no hope of serializing anyway.
         //this.validator.assertNoErrors(DECK);
@@ -114,6 +129,26 @@ public class EntryPoint {
         }
     }
 
+    // Reads a deck from a file
+	public gov.ornl.scale.keno.keno.InputFile loadFileKeno(String file) {
+        try {
+            Injector injector = new KenoStandaloneSetup().createInjectorAndDoEMFRegistration();
+            injector.injectMembers(this);
+            ResourceSet resourceSet = injector.<ResourceSet>getInstance(ResourceSet.class);
+            URI uri = URI.createURI(file);
+            Resource xtextResource = resourceSet.getResource(uri, true);
+            EcoreUtil.resolveAll(xtextResource);
+
+            gov.ornl.scale.keno.keno.InputFile DECK = (gov.ornl.scale.keno.keno.InputFile) (xtextResource.getContents().get(0));
+            this.validator.assertNoErrors(DECK);
+            
+            return(DECK);
+        }
+        catch (Throwable _e) {
+            throw Exceptions.sneakyThrow(_e);
+        }
+    }
+
     public fi.vtt.serpent.serpent.Deck deckResourceSerpent(fi.vtt.serpent.serpent.Deck deck, String filename) {
         Injector injector = new SerpentStandaloneSetup().createInjectorAndDoEMFRegistration();
 
@@ -131,6 +166,20 @@ public class EntryPoint {
 
     public gov.lanl.mcnp.mcnp.Deck deckResourceMcnp(gov.lanl.mcnp.mcnp.Deck deck, String filename) {
         Injector injector = new McnpStandaloneSetup().createInjectorAndDoEMFRegistration();
+        injector.injectMembers(this);
+        ResourceSet resourceSet = injector.<ResourceSet>getInstance(ResourceSet.class);
+        URI uri = URI.createURI(filename);
+        Resource resource = resourceSet.createResource(uri);
+
+        EList<EObject> _contents = resource.getContents();
+        _contents.add(deck);
+        Resource xtextResource = resourceSet.getResource(uri, true);
+        EcoreUtil.resolveAll(xtextResource);
+        return (deck);
+    }
+
+    public gov.ornl.scale.keno.keno.InputFile deckResourceKeno(gov.ornl.scale.keno.keno.InputFile deck, String filename) {
+        Injector injector = new KenoStandaloneSetup().createInjectorAndDoEMFRegistration();
         injector.injectMembers(this);
         ResourceSet resourceSet = injector.<ResourceSet>getInstance(ResourceSet.class);
         URI uri = URI.createURI(filename);
@@ -189,6 +238,26 @@ public class EntryPoint {
         DECK.setCells(CELLS);
         DECK.setSurfaces(SURFACES);
         DECK.setData(DATA);
+        EList<EObject> _contents = resource.getContents();
+        _contents.add(DECK);
+        Resource xtextResource = resourceSet.getResource(uri, true);
+        EcoreUtil.resolveAll(xtextResource);
+
+        return(DECK);
+    }
+
+    // Creates an empty input file.
+    public gov.ornl.scale.keno.keno.InputFile newKenoDeck(String filename) {
+        KenoStandaloneSetup setup = new KenoStandaloneSetup();
+        Injector injector = setup.createInjectorAndDoEMFRegistration();
+        injector.injectMembers(this);
+        ResourceSet resourceSet = injector.<ResourceSet>getInstance(ResourceSet.class);
+
+        URI uri = URI.createURI(filename);
+        Resource resource = resourceSet.createResource(uri);
+
+        gov.ornl.scale.keno.keno.InputFile DECK = factoryKeno.createInputFile();
+
         EList<EObject> _contents = resource.getContents();
         _contents.add(DECK);
         Resource xtextResource = resourceSet.getResource(uri, true);
