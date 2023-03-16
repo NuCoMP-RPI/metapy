@@ -260,6 +260,10 @@ def value_converter(setter, feature, value, numeric_ids):
     except (ValueError, Py4JJavaError, AttributeError):
         if isinstance(value, Enum):
             value_enum = is_enum(value.value, feature)
+            # In the event a Python Enum is still returned, just use the value.
+            # This let's us use Enums for eObjects that expect other data types.
+            if isinstance(value_enum, Enum):
+                value_enum = value_enum.value
             setter.eSet(feature, value_enum)
         elif isinstance(value, int):
             try:
