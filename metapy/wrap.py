@@ -364,7 +364,11 @@ def set_e_list(setter, feature, values, overrides):
         # Objects with 'name' have IDs and can be referenced.
         # We want to reference the original object, don't copy!
         if hasattr(value, 'name') and hasattr(value, '_e_object'):
-            e_list.addUnique(value._e_object)
+            try:
+                e_list.addUnique(value._e_object)
+            except:
+                print(value)
+                e_list.addUnique(value)
         elif type(value).__qualname__ in overrides:
             value_copy = gateway.copier.copy(value._e_object)
             gateway.copier.copyReferences()
