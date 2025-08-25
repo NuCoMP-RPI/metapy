@@ -5,6 +5,7 @@ from re import compile, sub, search
 from enum import Enum
 from metapy.gateway import gateway, is_instance_of, get_documentation
 from metapy.util import camel_to_snake_case
+import numpy
 
 override_sets = {'mcnpy': {},
                 'serpy': {},
@@ -256,6 +257,9 @@ def value_converter(setter, feature, value, numeric_ids):
             elif isinstance(value, str) and feature.getName() == 'comment':
                 if value[0] != '$':
                     value = '$ ' + value
+            elif isinstance(value, numpy.float64):
+                #print('NUMPY FLOAT64')
+                value = float(value)
         setter.eSet(feature, value)
     except (ValueError, Py4JJavaError, AttributeError):
         if isinstance(value, Enum):
@@ -364,11 +368,7 @@ def set_e_list(setter, feature, values, overrides):
         # Objects with 'name' have IDs and can be referenced.
         # We want to reference the original object, don't copy!
         if hasattr(value, 'name') and hasattr(value, '_e_object'):
-            try:
-                e_list.addUnique(value._e_object)
-            except:
-                print(value)
-                e_list.addUnique(value)
+            e_list.addUnique(value._e_object)
         elif type(value).__qualname__ in overrides:
             value_copy = gateway.copier.copy(value._e_object)
             gateway.copier.copyReferences()
